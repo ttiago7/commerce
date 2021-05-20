@@ -22,6 +22,7 @@ public class NotaCreditoController {
     @Autowired
     private NotaCreditoService notaCreditoService;
 
+    @CrossOrigin
     @PostMapping
     @Operation(summary = "Post a credit note")// notation de Swagger para la documentacion
     @ApiResponses(value = {// Documentacion
@@ -53,9 +54,10 @@ public class NotaCreditoController {
         }
     }
 
+    @CrossOrigin
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete credit note by id")
-    public String  deleteProducto(@PathVariable Integer id) {
+    public String  deleteNotaCredito(@PathVariable Integer id) {
         notaCreditoService.deleteCreditNoteByid(id);
         return ("Credit note id: " + id + " successfully deleted");
     }

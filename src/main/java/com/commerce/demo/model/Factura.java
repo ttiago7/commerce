@@ -17,8 +17,12 @@ public class Factura {
     private Integer idFactura;
 
     @OneToOne(fetch = FetchType.EAGER) //todo el contenido, contrario LAZY
-    @JoinColumn(name = "idCabecera")
+    @JoinColumn(name = "numeroDocumento")
     private Cabecera cabecera;
+
+    @OneToOne(fetch = FetchType.EAGER) //todo el contenido, contrario LAZY
+    @JoinColumn(name = "numeroPedido")
+    private Pedido pedido;
 
     @ManyToMany
     public List<DetalleFactura> detalleFactura;

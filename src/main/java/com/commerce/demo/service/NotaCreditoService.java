@@ -27,9 +27,10 @@ public class NotaCreditoService {
     }
 
     public PostResponse addCreditNote(NotaCredito notaCredito) {
-        Cabecera cab = notaCredito.getCabecera();
+        Cabecera cab = new Cabecera();
+        Factura factura = notaCredito.getFactura();
 
-        Cliente cliente = cab.getCliente();
+        Cliente cliente = factura.getCabecera().getCliente();
 
         String letra = "";
         switch (cliente.getCondicionImpositiva()) {
@@ -45,10 +46,15 @@ public class NotaCreditoService {
             default:
                 break;
         }
+        cab.setCodigoEmision(String.valueOf((int)(Math.random()*(9999-1000+1)+8)) +"-"+String.valueOf((int)(Math.random()*(9999-1000+1)+8)));
+        cab.setCliente(cliente);
         cab.setFechaEmision(new Date());
         cab.setLetra(letra);
 
         Cabecera cabeceraSaved = cabeceraRepository.save(cab);
+
+        notaCredito.setCabecera(cabeceraSaved);
+        notaCredito.setTotal(factura.getTotal());
 
         final NotaCredito notaCreditoSaved = notaCreditoRepository.save(notaCredito);
         return PostResponse.builder()

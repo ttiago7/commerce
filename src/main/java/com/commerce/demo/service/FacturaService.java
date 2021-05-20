@@ -37,9 +37,13 @@ public class FacturaService {
     @Async("threadPoolExecutor")
     public CompletableFuture<Factura> addInvoice(Factura factura) throws InterruptedException{
 //    public PostResponse addInvoice(Factura factura) {//
-        Cabecera cab = factura.getCabecera();
+//        Cabecera cab = factura.getCabecera();
+        Cabecera cab = new Cabecera();
 
-        Cliente cliente = cab.getCliente();
+        Pedido pedido = factura.getPedido();
+        System.out.println(pedido);
+        Cliente cliente = pedido.getCliente();
+        System.out.println(cliente);
 
         BigDecimal porcentajeIva = new BigDecimal(0);
         String letra = "";
@@ -59,6 +63,8 @@ public class FacturaService {
             default:
                 break;
         }
+        cab.setCodigoEmision(String.valueOf((int)(Math.random()*(9999-1000+1)+8)) +"-"+String.valueOf((int)(Math.random()*(9999-1000+1)+8)));
+        cab.setCliente(cliente);
         cab.setFechaEmision(new Date());
         cab.setLetra(letra);
 
@@ -67,20 +73,25 @@ public class FacturaService {
         List<DetalleFactura> detalle = new LinkedList<>();
         BigDecimal total = new BigDecimal(0);
         BigDecimal totalIva = new BigDecimal(0);
-        for (int i = 0; i < factura.getDetalleFactura().size(); i++) {
-            DetalleFactura detalleFactura = factura.getDetalleFactura().get(i);
 
-            Producto prod = detalleFactura.getProducto();
+        for (int i = 0; i < factura.getPedido().getDetallePedido().size(); i++) {
+            DetallePedido detallePedido = factura.getPedido().getDetallePedido().get(i);
+            DetalleFactura detalleFactura = new DetalleFactura();
+
+            Producto prod = detallePedido.getProducto();
+            detalleFactura.setProducto(prod);
+            detalleFactura.setCantidad(detallePedido.getCantidad());
+
             detalleFactura.setPrecioUnitario(prod.getPrecio());
-            detalleFactura.setPorcentajeIva(porcentajeIva);
+            detalleFactura.setPorcentajeIva(porcentajeIva.setScale(2, BigDecimal.ROUND_FLOOR));
 
             BigDecimal precioNeto = prod.getPrecio().multiply(BigDecimal.valueOf(detalleFactura.getCantidad()));// precio * cantidad
             BigDecimal montoIva = precioNeto.multiply(porcentajeIva).divide(new BigDecimal(100));//% de IVA según categoría
             BigDecimal precioVenta = precioNeto.add(montoIva);//Precio Neto + Iva
 
-            detalleFactura.setPrecioVenta(precioVenta);
-            detalleFactura.setPrecioNeto(precioNeto);
-            detalleFactura.setMontoIva(montoIva);
+            detalleFactura.setPrecioVenta(precioVenta.setScale(2, BigDecimal.ROUND_FLOOR));
+            detalleFactura.setPrecioNeto(precioNeto.setScale(2, BigDecimal.ROUND_FLOOR));
+            detalleFactura.setMontoIva(montoIva.setScale(2, BigDecimal.ROUND_FLOOR));
 
             total = total.add(precioVenta);
             totalIva = totalIva.add(montoIva);
@@ -91,8 +102,8 @@ public class FacturaService {
 
         factura.setCabecera(cabeceraSaved);
         factura.setDetalleFactura(detalle);
-        factura.setTotal(total);
-        factura.setTotalIva(totalIva);
+        factura.setTotal(total.setScale(2, BigDecimal.ROUND_FLOOR));
+        factura.setTotalIva(totalIva.setScale(2, BigDecimal.ROUND_FLOOR));
 
         final Factura facturaSaved = facturaRepository.save(factura);
 

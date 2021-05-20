@@ -38,4 +38,8 @@ public class ClienteService {
         clienteRepository.deleteById(id);
     }
 
+    public Cliente findClienteByNumeroDocumento (String numeroDocumento){
+        return clienteRepository.findClienteByNumeroDocumento(numeroDocumento);
+    }
+
 }

@@ -20,7 +20,7 @@ public class ClienteController {
     @Autowired // ic - i de dependencia
     private ClienteService clienteService;
 
-
+    @CrossOrigin
     @PostMapping
     @Operation(summary = "Post a client")// notation de Swagger para la documentacion
     @ApiResponses(value = {// Documentacion
@@ -43,7 +43,7 @@ public class ClienteController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get client by id")
-    public Cliente getWriter(@PathVariable Integer id) {
+    public Cliente getClienteById(@PathVariable Integer id) {
         Cliente response = clienteService.getCliente(id);
         if (response != null) {
             return response;
@@ -52,11 +52,23 @@ public class ClienteController {
         }
     }
 
+    @CrossOrigin
     @DeleteMapping("/{number}")
     @Operation(summary = "Delete client by number of client")
     public String  deleteProducto(@PathVariable Integer number) {
         clienteService.deleteClienteByid(number);
         return ("Cliente numero: " + number + " borrado exitosamente");
+    }
+
+    @GetMapping("/numero/{numero}")
+    @Operation(summary = "Get client by id")
+    public Cliente getClienteByNumeroDocumento(@PathVariable String numero) {
+        Cliente response = clienteService.findClienteByNumeroDocumento(numero);
+        if (response != null) {
+            return response;
+        } else {
+            return null;
+        }
     }
 }
 

@@ -20,6 +20,7 @@ public class ProductoController {
     @Autowired
     private ProductoService productoService;
 
+    @CrossOrigin
     @PostMapping
     @Operation(summary = "Post a product")// notation de Swagger para la documentacion
     @ApiResponses(value = {// Documentacion
@@ -51,7 +52,7 @@ public class ProductoController {
         }
     }
 
-
+    @CrossOrigin
     @DeleteMapping("/{codigo}")
     @Operation(summary = "Delete product by codigo")
     public String  deleteProducto(@PathVariable Integer codigo) {

@@ -17,7 +17,7 @@ public class NotaCredito {
     private Integer idNotaCredito;
 
     @OneToOne(fetch = FetchType.EAGER) //todo el contenido, contrario LAZY
-    @JoinColumn(name = "idCabecera")
+    @JoinColumn(name = "numeroDocumento")
     private Cabecera cabecera;
 
     @OneToOne(fetch = FetchType.EAGER) //todo el contenido, contrario LAZY

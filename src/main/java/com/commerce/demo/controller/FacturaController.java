@@ -21,6 +21,7 @@ public class FacturaController {
     @Autowired
     private FacturaService facturaService;
 
+    @CrossOrigin
     @PostMapping
     @Operation(summary = "Post a invoice")// notation de Swagger para la documentacion
 //    @ApiResponses(value = {// Documentacion
@@ -51,6 +52,7 @@ public class FacturaController {
         }
     }
 
+    @CrossOrigin
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete invoice by id")
     public String  deleteProducto(@PathVariable Integer id) {

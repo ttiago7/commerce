@@ -21,7 +21,7 @@ public class PedidoController {
     @Autowired // ic - i de dependencia
     private PedidoServices pedidoService;
 
-
+    @CrossOrigin
     @PostMapping
     @Operation(summary = "Post a order")// notation de Swagger para la documentacion
     @ApiResponses(value = {// Documentacion
@@ -53,6 +53,7 @@ public class PedidoController {
         }
     }
 
+    @CrossOrigin
     @DeleteMapping("/{number}")
     @Operation(summary = "Delete order by number of order")
     public String  deleteProducto(@PathVariable Integer number) {
@@ -60,6 +61,7 @@ public class PedidoController {
         return ("Order number: " + number + " successfully deleted");
     }
 
+    @CrossOrigin
     @PutMapping()
     @Operation(summary = "Update state of a order")
     public String updateState(@RequestBody Pedido pedido) {
